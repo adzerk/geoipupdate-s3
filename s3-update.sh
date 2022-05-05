@@ -20,7 +20,8 @@ while true; do
     arr=($GEOIPUPDATE_EDITION_IDS)
 
     for i in "${!arr[@]}"; do
-      aws s3 cp $database_dir/${arr[i]}.mmdb $S3_URI
+      last_modified=$(date -r $database_dir/${arr[i]}.mmdb "+%d-%m-%Y %H:%M:%S")
+      aws s3 cp $database_dir/${arr[i]}.mmdb $S3_URI --metadata '{"file-last-modified-datetime":"'"$last_modified"'"}'
     done
 
     if [ "$frequency" -eq 0 ]; then
